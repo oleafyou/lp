@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ======================================================================
+     【差し替えメモ】
+     1. 下の GAS_URL …… Googleスプレッドシート側で発行したウェブアプリURLに差し替え
+        （voice.html / general.html の GAS_URL と同じものを入れてください）
+     ====================================================================== -->
+
+<title>お客様の声（一般の方）｜O leaf YOU</title>
+<meta name="description" content="O leaf YOU 一般のお客様向けアンケート">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --base:      #FFFAF6;
+  --pink:      #F6C6D6;
+  --yellow:    #FBE6A8;
+  --ink:       #5B4552;
+  --ink-soft:  #8B7480;
+  --accent:    #C4809A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--base);color:var(--ink);
+  font-family:'Zen Kaku Gothic New',system-ui,sans-serif;
+  font-weight:400;line-height:1.9;min-height:100vh;overflow-x:hidden;
+}
+
+.veils{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none}
+.veil{position:absolute;border-radius:50%;filter:blur(70px);opacity:.72;mix-blend-mode:multiply}
+.veil.v1{width:78vw;height:78vw;min-width:340px;min-height:340px;top:-16vh;left:-22vw;
+  background:radial-gradient(circle at 40% 40%,var(--pink) 0%,rgba(246,198,214,0) 70%);
+  animation:drift1 26s ease-in-out infinite;}
+.veil.v2{width:82vw;height:82vw;min-width:360px;min-height:360px;top:4vh;right:-26vw;
+  background:radial-gradient(circle at 55% 45%,var(--yellow) 0%,rgba(251,230,168,0) 70%);
+  animation:drift2 31s ease-in-out infinite;}
+.veil.v3{width:70vw;height:70vw;min-width:300px;min-height:300px;bottom:-18vh;left:8vw;
+  background:radial-gradient(circle at 50% 50%,var(--pink) 0%,rgba(246,198,214,0) 72%);
+  animation:drift3 35s ease-in-out infinite;}
+.veil.v4{width:64vw;height:64vw;min-width:280px;min-height:280px;bottom:6vh;right:-14vw;
+  background:radial-gradient(circle at 50% 50%,var(--yellow) 0%,rgba(251,230,168,0) 72%);
+  animation:drift1 29s ease-in-out infinite reverse;}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(6vw,5vh) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(-7vw,6vh) scale(.94)}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(5vw,-6vh) scale(1.1)}}
+
+.page{position:relative; z-index:1; width:100%; max-width:440px; margin:0 auto; padding:36px 22px 56px}
+
+.back{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.74rem;letter-spacing:.06em;color:var(--ink-soft);
+  text-decoration:none;margin-bottom:22px;
+}
+.back svg{width:13px;height:13px}
+.back:hover{color:var(--accent)}
+
+.page-head{text-align:center;margin-bottom:8px}
+.page-head .tagline{
+  display:inline-block;
+  font-size:.68rem;letter-spacing:.08em;
+  background:#FDF0DC;color:#C4913F;
+  padding:5px 14px;border-radius:999px;
+  margin-bottom:14px;
+}
+.page-head h1{
+  font-family:'Shippori Mincho',serif;font-weight:600;
+  font-size:1.4rem;letter-spacing:.1em;
+}
+.page-head p{
+  font-size:.76rem;color:var(--ink-soft);margin-top:12px;line-height:2;
+  padding:0 6px;
+}
+
+.divider{display:flex;align-items:center;justify-content:center;gap:12px;margin:26px 0}
+.divider::before,.divider::after{content:"";height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(196,128,154,.35),transparent)}
+.divider span{width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.5;flex:none}
+
+.card{
+  background:rgba(255,255,255,.74);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:22px;
+  box-shadow:0 6px 22px rgba(196,128,154,.13);
+  padding:26px 22px;
+}
+
+.field{margin-bottom:24px}
+.field:last-of-type{margin-bottom:0}
+.field label.q{
+  display:block;
+  font-family:'Shippori Mincho',serif;
+  font-size:.86rem;font-weight:600;letter-spacing:.03em;
+  margin-bottom:10px;color:var(--ink);
+}
+.field .qnum{color:var(--accent);margin-right:4px}
+.field .hint{font-size:.68rem;color:var(--ink-soft);margin-top:-6px;margin-bottom:10px;display:block}
+
+input[type="text"],textarea,select{
+  width:100%;
+  font-family:'Zen Kaku Gothic New',sans-serif;
+  font-size:.9rem;color:var(--ink);
+  background:rgba(255,255,255,.85);
+  border:1px solid rgba(196,128,154,.28);
+  border-radius:13px;
+  padding:12px 14px;
+  outline:none;
+  transition:border-color .25s ease, box-shadow .25s ease;
+  appearance:none;-webkit-appearance:none;
+}
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23C4809A' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+  padding-right:36px;
+}
+input[type="text"]:focus,textarea:focus,select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(196,128,154,.14);
+}
+textarea{resize:vertical;min-height:130px;line-height:1.8}
+
+.opt-row{display:flex;flex-wrap:wrap;gap:9px}
+.opt{flex:1;min-width:80px}
+.opt.wide{flex-basis:100%}
+.opt input{position:absolute;opacity:0;width:0;height:0}
+.opt span{
+  display:block;text-align:center;
+  font-size:.8rem;letter-spacing:.02em;
+  padding:10px 8px;border-radius:12px;
+  background:rgba(255,255,255,.6);
+  border:1px solid rgba(196,128,154,.24);
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.opt input:checked + span{
+  background:linear-gradient(135deg,var(--pink),var(--yellow));
+  border-color:transparent;color:var(--ink);font-weight:500;
+  box-shadow:0 4px 14px rgba(196,128,154,.22);
+}
+.opt input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+
+.submit-btn{
+  width:100%;margin-top:6px;
+  font-family:'Shippori Mincho',serif;
+  font-size:.98rem;font-weight:600;letter-spacing:.12em;
+  color:#fff;
+  background:linear-gradient(135deg,var(--accent),#D9A15C);
+  border:none;border-radius:15px;padding:15px;cursor:pointer;
+  box-shadow:0 8px 22px rgba(196,128,154,.3);
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(196,128,154,.36)}
+.submit-btn:active{transform:translateY(0)}
+.submit-btn:disabled{opacity:.55;cursor:default;transform:none}
+
+.error-msg{font-size:.72rem;color:#B4587A;margin-top:8px;display:none}
+
+.thanks{display:none;text-align:center;padding:20px 6px}
+.thanks .mark{
+  width:52px;height:52px;margin:0 auto 18px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--yellow));
+  display:grid;place-items:center;
+}
+.thanks .mark svg{width:24px;height:24px;color:#fff}
+.thanks h2{font-family:'Shippori Mincho',serif;font-size:1.05rem;letter-spacing:.08em;margin-bottom:12px}
+.thanks p{font-size:.82rem;color:var(--ink-soft);line-height:2}
+
+footer{
+  text-align:center;margin-top:44px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.72rem;letter-spacing:.18em;color:var(--ink-soft);
+}
+
+.fade{opacity:0;transform:translateY(14px);animation:fade .8s ease forwards}
+@keyframes fade{to{opacity:1;transform:translateY(0)}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .fade{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="veils" aria-hidden="true">
+  <div class="veil v1"></div>
+  <div class="veil v2"></div>
+  <div class="veil v3"></div>
+  <div class="veil v4"></div>
+</div>
+
+<main class="page">
+
+  <a class="back" href="voice.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    お客様の声トップに戻る
+  </a>
+
+  <div class="page-head fade">
+    <span class="tagline">一般の方</span>
+    <h1>お客様の声アンケート</h1>
+    <p>
+      ご協力いただきありがとうございます。<br>
+      差し支えない範囲でご記入ください。
+    </p>
+  </div>
+
+  <div class="divider fade"></div>
+
+  <div class="card fade">
+    <form id="voiceForm">
+
+      <div class="field">
+        <label class="q"><span class="qnum">1</span>新規・リピートどちらですか？</label>
+        <div class="opt-row">
+          <label class="opt"><input type="radio" name="newOrRepeat" value="新規" required><span>新規</span></label>
+          <label class="opt"><input type="radio" name="newOrRepeat" value="リピート" required><span>リピート</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="q"><span class="qnum">2</span>対面・オンラインどちらで受けられましたか？</label>
+        <div class="opt-row">
+          <label class="opt"><input type="radio" name="format" value="対面" required><span>対面</span></label>
+          <label class="opt"><input type="radio" name="format" value="オンライン" required><span>オンライン</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="q" for="prefecture"><span class="qnum">3</span>地域（都道府県）</label>
+        <select id="prefecture" name="prefecture" required>
+          <option value="" disabled selected>都道府県を選択</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="q" for="company"><span class="qnum">4</span>会社名</label>
+        <input type="text" id="company" name="company" required maxlength="60">
+      </div>
+
+      <div class="field">
+        <label class="q" for="category"><span class="qnum">5</span>ビジネスカテゴリー</label>
+        <input type="text" id="category" name="category" required maxlength="60" placeholder="例）保険代理店、士業、美容業　など">
+      </div>
+
+      <div class="field">
+        <label class="q" for="name"><span class="qnum">6</span>お名前</label>
+        <span class="hint">ニックネーム、イニシャルでも構いません</span>
+        <input type="text" id="name" name="name" required maxlength="40">
+      </div>
+
+      <div class="field">
+        <label class="q"><span class="qnum">7</span>年齢</label>
+        <div class="opt-row" id="ageGroup">
+          <label class="opt"><input type="checkbox" data-age name="age10" value="10代"><span>10代</span></label>
+          <label class="opt"><input type="checkbox" data-age name="age20" value="20代"><span>20代</span></label>
+          <label class="opt"><input type="checkbox" data-age name="age30" value="30代"><span>30代</span></label>
+          <label class="opt"><input type="checkbox" data-age name="age40" value="40代"><span>40代</span></label>
+          <label class="opt"><input type="checkbox" data-age name="age50" value="50代"><span>50代</span></label>
+          <label class="opt"><input type="checkbox" data-age name="age60" value="60代"><span>60代</span></label>
+          <label class="opt"><input type="checkbox" data-age name="age70" value="70代以上"><span>70代以上</span></label>
+        </div>
+        <p class="error-msg" id="ageError">年齢を1つ選択してください</p>
+      </div>
+
+      <div class="field">
+        <label class="q"><span class="qnum">8</span>性別</label>
+        <div class="opt-row">
+          <label class="opt"><input type="radio" name="gender" value="男" required><span>男</span></label>
+          <label class="opt"><input type="radio" name="gender" value="女" required><span>女</span></label>
+          <label class="opt"><input type="radio" name="gender" value="回答しない" required><span>回答しない</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="q"><span class="qnum">9</span>SNSで掲載してもいいですか？</label>
+        <div class="opt-row">
+          <label class="opt"><input type="radio" name="snsOk" value="はい" required><span>はい</span></label>
+          <label class="opt"><input type="radio" name="snsOk" value="いいえ" required><span>いいえ</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="q" for="message"><span class="qnum">10</span>感想</label>
+        <span class="hint">受けたきっかけ・受けた後の感想等、差し支えない範囲で、自由にお願いします</span>
+        <textarea id="message" name="message" required maxlength="1000"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">送信する</button>
+      <p class="error-msg" id="submitError">送信に失敗しました。お手数ですが、時間をおいて再度お試しください。</p>
+    </form>
+
+    <div class="thanks" id="thanks">
+      <div class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>
+      </div>
+      <h2>ありがとうございました</h2>
+      <p>大切なお声をお寄せいただき<br>心より感謝申し上げます。</p>
+    </div>
+  </div>
+
+  <footer>&copy; O leaf YOU</footer>
+
+</main>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbymm82UURXW3xpiS-IoOIoJQuc8_sSONItli3z2CRP4INsm0LMQ9D3Hly79-l3SGWPK/exec';
+
+/* 都道府県プルダウン */
+const prefectures = ['北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'];
+const prefSelect = document.getElementById('prefecture');
+prefectures.forEach(function (p) {
+  const o = document.createElement('option');
+  o.value = p; o.textContent = p;
+  prefSelect.appendChild(o);
+});
+
+/* 年齢チェックボックス：1つだけ選べるようにする */
+const ageBoxes = document.querySelectorAll('#ageGroup input[data-age]');
+ageBoxes.forEach(function (box) {
+  box.addEventListener('change', function () {
+    if (box.checked) {
+      ageBoxes.forEach(function (b) { if (b !== box) b.checked = false; });
+    }
+  });
+});
+function getSelectedAge() {
+  let val = '';
+  ageBoxes.forEach(function (b) { if (b.checked) val = b.value; });
+  return val;
+}
+
+const form = document.getElementById('voiceForm');
+const submitBtn = document.getElementById('submitBtn');
+const submitError = document.getElementById('submitError');
+const ageError = document.getElementById('ageError');
+const thanks = document.getElementById('thanks');
+
+form.addEventListener('submit', function (ev) {
+  ev.preventDefault();
+  submitError.style.display = 'none';
+  ageError.style.display = 'none';
+
+  const age = getSelectedAge();
+  if (!age) {
+    ageError.style.display = 'block';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = '送信中…';
+
+  const data = {
+    type: '一般',
+    newOrRepeat: form.newOrRepeat.value,
+    format: form.format.value,
+    prefecture: form.prefecture.value,
+    company: form.company.value.trim(),
+    category: form.category.value.trim(),
+    name: form.name.value.trim(),
+    age: age,
+    gender: form.gender.value,
+    snsOk: form.snsOk.value,
+    message: form.message.value.trim()
+  };
+
+  fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  })
+    .then(function () {
+      form.style.display = 'none';
+      thanks.style.display = 'block';
+    })
+    .catch(function () {
+      submitError.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = '送信する';
+    });
+});
+</script>
+
+</body>
+</html>

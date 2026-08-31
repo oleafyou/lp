@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ======================================================================
+     【差し替えメモ】
+     1. 下の GAS_URL …… Googleスプレッドシート側で発行したウェブアプリURLに差し替え
+        （bnivoice.html / general.html の GAS_URL と同じものを入れてください）
+     ====================================================================== -->
+
+<title>お客様の声｜O leaf YOU</title>
+<meta name="description" content="O leaf YOUをご利用いただいた方の感想を掲載しています。">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --base:      #FFFAF6;
+  --pink:      #F6C6D6;
+  --yellow:    #FBE6A8;
+  --ink:       #5B4552;
+  --ink-soft:  #8B7480;
+  --accent:    #C4809A;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+
+body{
+  background:var(--base);
+  color:var(--ink);
+  font-family:'Zen Kaku Gothic New',system-ui,sans-serif;
+  font-weight:400;
+  line-height:1.9;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+.veils{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none}
+.veil{position:absolute;border-radius:50%;filter:blur(70px);opacity:.72;mix-blend-mode:multiply}
+.veil.v1{width:78vw;height:78vw;min-width:340px;min-height:340px;top:-16vh;left:-22vw;
+  background:radial-gradient(circle at 40% 40%,var(--pink) 0%,rgba(246,198,214,0) 70%);
+  animation:drift1 26s ease-in-out infinite;}
+.veil.v2{width:82vw;height:82vw;min-width:360px;min-height:360px;top:4vh;right:-26vw;
+  background:radial-gradient(circle at 55% 45%,var(--yellow) 0%,rgba(251,230,168,0) 70%);
+  animation:drift2 31s ease-in-out infinite;}
+.veil.v3{width:70vw;height:70vw;min-width:300px;min-height:300px;bottom:-18vh;left:8vw;
+  background:radial-gradient(circle at 50% 50%,var(--pink) 0%,rgba(246,198,214,0) 72%);
+  animation:drift3 35s ease-in-out infinite;}
+.veil.v4{width:64vw;height:64vw;min-width:280px;min-height:280px;bottom:6vh;right:-14vw;
+  background:radial-gradient(circle at 50% 50%,var(--yellow) 0%,rgba(251,230,168,0) 72%);
+  animation:drift1 29s ease-in-out infinite reverse;}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(6vw,5vh) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(-7vw,6vh) scale(.94)}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(5vw,-6vh) scale(1.1)}}
+
+.page{position:relative; z-index:1; width:100%; max-width:440px; margin:0 auto; padding:36px 22px 56px}
+
+.back{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.74rem;letter-spacing:.06em;color:var(--ink-soft);
+  text-decoration:none;margin-bottom:22px;
+}
+.back svg{width:13px;height:13px}
+.back:hover{color:var(--accent)}
+
+.page-head{text-align:center;margin-bottom:8px}
+.page-head .en{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:.8rem;letter-spacing:.28em;color:var(--accent);margin-bottom:8px;
+}
+.page-head h1{
+  font-family:'Shippori Mincho',serif;font-weight:600;
+  font-size:1.5rem;letter-spacing:.14em;
+}
+.page-head p{
+  font-size:.78rem;color:var(--ink-soft);margin-top:12px;line-height:2;
+  padding:0 6px;
+}
+
+.divider{display:flex;align-items:center;justify-content:center;gap:12px;margin:28px 0}
+.divider::before,.divider::after{content:"";height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(196,128,154,.35),transparent)}
+.divider span{width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.5;flex:none}
+
+/* 入口ボタン（BNI／一般） */
+.entry-choices{display:flex;flex-direction:column;gap:14px}
+.entry-btn{
+  position:relative;
+  display:flex;align-items:center;gap:16px;
+  padding:19px 20px;
+  border-radius:20px;
+  background:rgba(255,255,255,.76);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 6px 22px rgba(196,128,154,.14);
+  text-decoration:none;color:inherit;
+  overflow:hidden;
+  transition:transform .3s cubic-bezier(.2,.8,.3,1),box-shadow .3s ease;
+}
+.entry-btn::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.75) 50%,transparent 70%);
+  transform:translateX(-110%);
+  transition:transform .75s ease;
+  pointer-events:none;
+}
+.entry-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(196,128,154,.22)}
+.entry-btn:hover::after{transform:translateX(110%)}
+.entry-btn:active{transform:translateY(-1px)}
+
+.entry-btn .badge{
+  flex:none;width:52px;height:52px;border-radius:16px;
+  display:grid;place-items:center;
+  font-family:'Shippori Mincho',serif;font-weight:600;font-size:.9rem;
+}
+.entry-btn.bni .badge{background:#E8F0FC;color:#3E68B0}
+.entry-btn.general .badge{background:#FDF0DC;color:#C4913F}
+
+.entry-btn .txt{flex:1;min-width:0}
+.entry-btn .ttl{
+  font-family:'Shippori Mincho',serif;
+  font-size:1.05rem;font-weight:600;letter-spacing:.05em;
+}
+.entry-btn .sub{
+  font-size:.72rem;letter-spacing:.03em;color:var(--ink-soft);
+  margin-top:3px;
+}
+.entry-btn .arw{flex:none;color:var(--accent);opacity:.55}
+.entry-btn .arw svg{width:16px;height:16px;display:block}
+
+/* お声一覧 */
+.voice-section{margin-top:52px}
+.section-head{text-align:center;margin-bottom:24px}
+.section-head .en{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:.76rem;letter-spacing:.26em;color:var(--accent);margin-bottom:6px;
+}
+.section-head h2{
+  font-family:'Shippori Mincho',serif;font-weight:600;font-size:1.15rem;letter-spacing:.1em;
+}
+
+.voice-list{display:flex;flex-direction:column;gap:14px}
+.voice-card{
+  background:rgba(255,255,255,.68);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:19px;
+  padding:18px 19px;
+  box-shadow:0 5px 18px rgba(196,128,154,.1);
+}
+.voice-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.voice-name{
+  font-family:'Shippori Mincho',serif;font-weight:600;
+  font-size:.86rem;color:var(--accent);
+  display:flex;align-items:center;gap:7px;
+}
+.voice-name::before{
+  content:"";width:5px;height:5px;border-radius:50%;
+  background:var(--accent);opacity:.6;flex:none;
+}
+.tag{
+  flex:none;font-size:.62rem;letter-spacing:.05em;
+  padding:4px 10px;border-radius:999px;font-weight:500;
+}
+.tag.bni{background:#E8F0FC;color:#3E68B0}
+.tag.general{background:#FDF0DC;color:#C4913F}
+
+.voice-msg{font-size:.83rem;color:var(--ink);line-height:1.95;white-space:pre-line}
+
+.state-msg{
+  text-align:center;font-size:.76rem;color:var(--ink-soft);
+  padding:30px 10px;
+}
+
+footer{
+  text-align:center;margin-top:44px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.72rem;letter-spacing:.18em;
+  color:var(--ink-soft);
+}
+
+.fade{opacity:0;transform:translateY(14px);animation:fade .8s ease forwards}
+@keyframes fade{to{opacity:1;transform:translateY(0)}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .fade{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="veils" aria-hidden="true">
+  <div class="veil v1"></div>
+  <div class="veil v2"></div>
+  <div class="veil v3"></div>
+  <div class="veil v4"></div>
+</div>
+
+<main class="page">
+
+  <a class="back" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    リンク一覧に戻る
+  </a>
+
+  <div class="page-head fade">
+    <p class="en">Voice</p>
+    <h1>お客様の声</h1>
+    <p>
+      セッションを受けてくださった方からの<br>
+      感想を伺っています。<br>
+      いただいたお声は、今後の活動の<br>
+      励みにさせていただきます。
+    </p>
+  </div>
+
+  <div class="divider fade"></div>
+
+  <!-- 入口：BNI／一般 -->
+  <nav class="entry-choices fade">
+    <a class="entry-btn bni" href="bnivoice.html">
+      <span class="badge">BNI</span>
+      <span class="txt">
+        <span class="ttl">BNIの方</span>
+        <span class="sub">BNIメンバーとしてご利用の方はこちら</span>
+      </span>
+      <span class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+    </a>
+
+    <a class="entry-btn general" href="general.html">
+      <span class="badge">一般</span>
+      <span class="txt">
+        <span class="ttl">一般の方</span>
+        <span class="sub">上記以外でご利用の方はこちら</span>
+      </span>
+      <span class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+    </a>
+  </nav>
+
+  <!-- お声一覧 -->
+  <div class="voice-section">
+    <div class="section-head fade">
+      <p class="en">Testimonials</p>
+      <h2>いただいたお声</h2>
+    </div>
+    <div class="voice-list" id="voiceList">
+      <p class="state-msg">読み込んでいます…</p>
+    </div>
+  </div>
+
+  <footer>&copy; O leaf YOU</footer>
+
+</main>
+
+<script>
+/* ============================================================
+   【差し替えメモ】
+   bnivoice.html / general.html と同じ GAS_URL を入れてください。
+   ============================================================ */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbymm82UURXW3xpiS-IoOIoJQuc8_sSONItli3z2CRP4INsm0LMQ9D3Hly79-l3SGWPK/exec';
+
+function renderTestimonials(list) {
+  const wrap = document.getElementById('voiceList');
+  if (!list || list.length === 0) {
+    wrap.innerHTML = '<p class="state-msg">まだお声が届いていません</p>';
+    return;
+  }
+  wrap.innerHTML = list.map(function (t) {
+    const tagClass = t.type === 'BNI' ? 'bni' : 'general';
+    const tagLabel = t.type === 'BNI' ? 'BNI' : '一般';
+    return (
+      '<div class="voice-card fade">' +
+        '<div class="voice-top">' +
+          '<p class="voice-name">' + escapeHtml(t.nickname) + ' 様</p>' +
+          '<span class="tag ' + tagClass + '">' + tagLabel + '</span>' +
+        '</div>' +
+        '<p class="voice-msg">' + escapeHtml(t.message) + '</p>' +
+      '</div>'
+    );
+  }).join('');
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/[&<>"']/g, function (s) {
+    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[s];
+  });
+}
+
+function loadTestimonials() {
+  if (GAS_URL.indexOf('ここに') === 0) {
+    document.getElementById('voiceList').innerHTML =
+      '<p class="state-msg">GAS_URLの設定が済むと、ここにお声が表示されます</p>';
+    return;
+  }
+  const script = document.createElement('script');
+  script.src = GAS_URL + '?callback=renderTestimonials';
+  script.onerror = function () {
+    document.getElementById('voiceList').innerHTML =
+      '<p class="state-msg">読み込みに失敗しました</p>';
+  };
+  document.body.appendChild(script);
+}
+loadTestimonials();
+</script>
+
+</body>
+</html>
