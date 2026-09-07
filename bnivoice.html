@@ -147,6 +147,22 @@ textarea{resize:vertical;min-height:130px;line-height:1.8}
 }
 .opt input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
 
+.date-unknown{
+  display:flex;align-items:center;gap:8px;
+  margin-top:10px;
+  font-size:.78rem;color:var(--ink-soft);
+  cursor:pointer;
+}
+.date-unknown input{
+  width:16px;height:16px;flex:none;
+  accent-color:var(--accent);
+  cursor:pointer;
+}
+input[type="date"]:disabled{
+  background:rgba(240,235,232,.6);
+  color:var(--ink-soft);
+}
+
 .submit-btn{
   width:100%;margin-top:6px;
   font-family:'Shippori Mincho',serif;
@@ -236,7 +252,12 @@ footer{
 
       <div class="field">
         <label class="q" for="sessionDate"><span class="qnum">3</span>カウンセリングを受けた日</label>
-        <input type="date" id="sessionDate" name="sessionDate" required>
+        <input type="date" id="sessionDate" name="sessionDate">
+        <label class="date-unknown">
+          <input type="checkbox" id="dateUnknown" name="dateUnknown">
+          <span>日付が分からない方はこちらにチェック</span>
+        </label>
+        <p class="error-msg" id="dateError">日付を入力するか、「分からない」にチェックしてください</p>
       </div>
 
       <div class="field">
@@ -350,20 +371,44 @@ function getSelectedAge() {
   return val;
 }
 
+/* 「日付が分からない」チェックで日付入力をスキップできるようにする */
+const dateInput = document.getElementById('sessionDate');
+const dateUnknown = document.getElementById('dateUnknown');
+dateUnknown.addEventListener('change', function () {
+  if (dateUnknown.checked) {
+    dateInput.value = '';
+    dateInput.disabled = true;
+  } else {
+    dateInput.disabled = false;
+  }
+});
+function getSessionDate() {
+  if (dateUnknown.checked) return '不明';
+  return dateInput.value;
+}
+
 const form = document.getElementById('voiceForm');
 const submitBtn = document.getElementById('submitBtn');
 const submitError = document.getElementById('submitError');
 const ageError = document.getElementById('ageError');
+const dateError = document.getElementById('dateError');
 const thanks = document.getElementById('thanks');
 
 form.addEventListener('submit', function (ev) {
   ev.preventDefault();
   submitError.style.display = 'none';
   ageError.style.display = 'none';
+  dateError.style.display = 'none';
 
   const age = getSelectedAge();
   if (!age) {
     ageError.style.display = 'block';
+    return;
+  }
+
+  const sessionDate = getSessionDate();
+  if (!sessionDate) {
+    dateError.style.display = 'block';
     return;
   }
 
@@ -374,7 +419,7 @@ form.addEventListener('submit', function (ev) {
     type: 'BNI',
     newOrRepeat: form.newOrRepeat.value,
     format: form.format.value,
-    sessionDate: form.sessionDate.value,
+    sessionDate: sessionDate,
     prefecture: form.prefecture.value,
     company: form.company.value.trim(),
     category: form.category.value.trim(),
