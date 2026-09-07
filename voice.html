@@ -170,6 +170,7 @@ body{
 .tag.general{background:#FDF0DC;color:#C4913F}
 
 .voice-msg{font-size:.83rem;color:var(--ink);line-height:1.95;white-space:pre-line}
+.voice-company{font-size:.74rem;color:var(--accent);font-weight:500;letter-spacing:.02em;margin-bottom:4px}
 .voice-date{font-size:.68rem;color:var(--ink-soft);letter-spacing:.03em;margin-bottom:8px}
 
 .state-msg{
@@ -275,12 +276,14 @@ function renderTestimonials(list) {
     const tagClass = t.type === 'BNI' ? 'bni' : 'general';
     const tagLabel = t.type === 'BNI' ? 'BNI' : '一般';
     const dateLabel = t.sessionDate ? escapeHtml(t.sessionDate) + ' にご利用' : '';
+    const companyLabel = t.company ? escapeHtml(t.company) : '';
     return (
       '<div class="voice-card fade">' +
         '<div class="voice-top">' +
           '<p class="voice-name">' + escapeHtml(t.nickname) + ' 様</p>' +
           '<span class="tag ' + tagClass + '">' + tagLabel + '</span>' +
         '</div>' +
+        (companyLabel ? '<p class="voice-company">' + companyLabel + '</p>' : '') +
         (dateLabel ? '<p class="voice-date">' + dateLabel + '</p>' : '') +
         '<p class="voice-msg">' + escapeHtml(t.message) + '</p>' +
       '</div>'
