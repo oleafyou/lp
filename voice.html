@@ -169,6 +169,7 @@ body{
 .tag.repeat{background:#E4F6E9;color:#2FA35F}
 
 .voice-msg{font-size:.83rem;color:var(--ink);line-height:1.95;white-space:pre-line}
+.voice-msg-label{font-size:.66rem;color:var(--accent);letter-spacing:.04em;font-weight:500;margin-bottom:3px}
 .voice-company{font-size:.74rem;color:var(--accent);font-weight:500;letter-spacing:.02em;margin-bottom:4px}
 .voice-meta{font-size:.68rem;color:var(--ink-soft);letter-spacing:.03em;margin-bottom:4px}
 .voice-date{font-size:.68rem;color:var(--ink-soft);letter-spacing:.03em;margin-bottom:8px}
@@ -306,6 +307,7 @@ function renderTestimonials(list) {
         (dateLabel ? '<p class="voice-date">' + dateLabel + '</p>' : '') +
         motivationBlock +
         issueBlock +
+        '<p class="voice-msg-label">受けてみての感想</p>' +
         '<p class="voice-msg">' + escapeHtml(t.message) + '</p>' +
       '</div>'
     );
