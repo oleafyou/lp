@@ -276,13 +276,19 @@ footer{
 
       <div class="field">
         <label class="q" for="category"><span class="qnum">6</span>ビジネスカテゴリー</label>
-        <input type="text" id="category" name="category" required maxlength="60" placeholder="例）保険代理店、士業、美容業　など">
+        <span class="hint">任意でご記入ください</span>
+        <input type="text" id="category" name="category" maxlength="60" placeholder="例）保険代理店、士業、美容業　など">
       </div>
 
       <div class="field">
         <label class="q" for="name"><span class="qnum">7</span>お名前</label>
         <span class="hint">ニックネーム、イニシャルでも構いません</span>
-        <input type="text" id="name" name="name" required maxlength="40">
+        <input type="text" id="name" name="name" maxlength="40">
+        <label class="date-unknown">
+          <input type="checkbox" id="nameAnonymous" name="nameAnonymous">
+          <span>匿名希望の方はこちらにチェック</span>
+        </label>
+        <p class="error-msg" id="nameError">お名前を入力するか、「匿名希望」にチェックしてください</p>
       </div>
 
       <div class="field">
@@ -404,6 +410,22 @@ function getSessionDate() {
   return dateInput.value;
 }
 
+/* 「匿名希望」チェックで名前入力をスキップできるようにする */
+const nameInput = document.getElementById('name');
+const nameAnonymous = document.getElementById('nameAnonymous');
+nameAnonymous.addEventListener('change', function () {
+  if (nameAnonymous.checked) {
+    nameInput.value = '';
+    nameInput.disabled = true;
+  } else {
+    nameInput.disabled = false;
+  }
+});
+function getName() {
+  if (nameAnonymous.checked) return '匿名希望';
+  return nameInput.value.trim();
+}
+
 /* 「ご紹介によるカウンセリングでしたか？」で紹介者名欄の表示を切り替える */
 const referralRadios = document.querySelectorAll('input[name="referral"]');
 const referrerWrap = document.getElementById('referrerWrap');
@@ -424,6 +446,7 @@ const submitBtn = document.getElementById('submitBtn');
 const submitError = document.getElementById('submitError');
 const ageError = document.getElementById('ageError');
 const dateError = document.getElementById('dateError');
+const nameError = document.getElementById('nameError');
 const thanks = document.getElementById('thanks');
 
 form.addEventListener('submit', function (ev) {
@@ -431,6 +454,7 @@ form.addEventListener('submit', function (ev) {
   submitError.style.display = 'none';
   ageError.style.display = 'none';
   dateError.style.display = 'none';
+  nameError.style.display = 'none';
 
   const age = getSelectedAge();
   if (!age) {
@@ -441,6 +465,12 @@ form.addEventListener('submit', function (ev) {
   const sessionDate = getSessionDate();
   if (!sessionDate) {
     dateError.style.display = 'block';
+    return;
+  }
+
+  const name = getName();
+  if (!name) {
+    nameError.style.display = 'block';
     return;
   }
 
@@ -455,7 +485,7 @@ form.addEventListener('submit', function (ev) {
     prefecture: form.prefecture.value,
     company: form.company.value.trim(),
     category: form.category.value.trim(),
-    name: form.name.value.trim(),
+    name: name,
     age: age,
     gender: form.gender.value,
     snsOk: form.snsOk.value,
