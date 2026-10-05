@@ -10,8 +10,8 @@
         （voice.html / general.html の GAS_URL と同じものを入れてください）
      ====================================================================== -->
 
-<title>お客様の声（一般の方）｜O leaf YOU</title>
-<meta name="description" content="O leaf YOU 一般のお客様向けアンケート">
+<title>お客様の声アンケート｜O leaf YOU</title>
+<meta name="description" content="O leaf YOUのセッションを受けた方へのアンケートです。">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -125,6 +125,9 @@ input[type="text"]:focus,textarea:focus,select:focus{
   box-shadow:0 0 0 3px rgba(196,128,154,.14);
 }
 textarea{resize:vertical;min-height:130px;line-height:1.8}
+textarea.sm{min-height:80px}
+
+.referrer-wrap{margin-top:10px;display:none}
 
 .opt-row{display:flex;flex-wrap:wrap;gap:9px}
 .opt{flex:1;min-width:80px}
@@ -221,7 +224,6 @@ footer{
   </a>
 
   <div class="page-head fade">
-    <span class="tagline">一般の方</span>
     <h1>お客様の声アンケート</h1>
     <p>
       ご協力いただきありがとうございます。<br>
@@ -315,8 +317,30 @@ footer{
       </div>
 
       <div class="field">
-        <label class="q" for="message"><span class="qnum">11</span>感想</label>
-        <span class="hint">受けたきっかけ・受けた後の感想等、差し支えない範囲で、自由にお願いします</span>
+        <label class="q"><span class="qnum">11</span>ご紹介によるカウンセリングでしたか？</label>
+        <div class="opt-row">
+          <label class="opt"><input type="radio" name="referral" value="はい" required><span>はい</span></label>
+          <label class="opt"><input type="radio" name="referral" value="いいえ" required><span>いいえ</span></label>
+        </div>
+        <div class="referrer-wrap" id="referrerWrap">
+          <input type="text" id="referrerName" name="referrerName" maxlength="40" placeholder="紹介者のお名前（任意）">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="q" for="motivation"><span class="qnum">12</span>受けようと思ったきっかけ</label>
+        <span class="hint">任意でご記入ください</span>
+        <textarea class="sm" id="motivation" name="motivation" maxlength="500"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="q" for="issue"><span class="qnum">13</span>解決したかった内容</label>
+        <span class="hint">任意でご記入ください</span>
+        <textarea class="sm" id="issue" name="issue" maxlength="500"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="q" for="message"><span class="qnum">14</span>受けてみての感想</label>
         <textarea id="message" name="message" required maxlength="1000"></textarea>
       </div>
 
@@ -380,6 +404,21 @@ function getSessionDate() {
   return dateInput.value;
 }
 
+/* 「ご紹介によるカウンセリングでしたか？」で紹介者名欄の表示を切り替える */
+const referralRadios = document.querySelectorAll('input[name="referral"]');
+const referrerWrap = document.getElementById('referrerWrap');
+const referrerName = document.getElementById('referrerName');
+referralRadios.forEach(function (r) {
+  r.addEventListener('change', function () {
+    if (r.value === 'はい' && r.checked) {
+      referrerWrap.style.display = 'block';
+    } else if (r.checked) {
+      referrerWrap.style.display = 'none';
+      referrerName.value = '';
+    }
+  });
+});
+
 const form = document.getElementById('voiceForm');
 const submitBtn = document.getElementById('submitBtn');
 const submitError = document.getElementById('submitError');
@@ -420,6 +459,10 @@ form.addEventListener('submit', function (ev) {
     age: age,
     gender: form.gender.value,
     snsOk: form.snsOk.value,
+    referral: form.referral.value,
+    referrerName: form.referrerName.value.trim(),
+    motivation: form.motivation.value.trim(),
+    issue: form.issue.value.trim(),
     message: form.message.value.trim()
   };
 

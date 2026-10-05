@@ -117,8 +117,7 @@ body{
   display:grid;place-items:center;
   font-family:'Shippori Mincho',serif;font-weight:600;font-size:.9rem;
 }
-.entry-btn.bni .badge{background:#E8F0FC;color:#3E68B0}
-.entry-btn.general .badge{background:#FDF0DC;color:#C4913F}
+.entry-btn.single .badge{background:linear-gradient(135deg,var(--pink),var(--yellow));color:#fff}
 
 .entry-btn .txt{flex:1;min-width:0}
 .entry-btn .ttl{
@@ -223,22 +222,18 @@ footer{
 
   <div class="divider fade"></div>
 
-  <!-- 入口：BNI／一般 -->
+  <!-- 入口：お客様の声アンケート -->
   <nav class="entry-choices fade">
-    <a class="entry-btn bni" href="bnivoice.html">
-      <span class="badge">BNI</span>
-      <span class="txt">
-        <span class="ttl">BNIの方</span>
-        <span class="sub">BNIメンバーとしてご利用の方はこちら</span>
+    <a class="entry-btn single" href="general.html">
+      <span class="badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 5.5h16v10.5H9.5L5 20v-4H4z"/>
+          <path d="M8 9.5h8M8 12.5h5"/>
+        </svg>
       </span>
-      <span class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
-    </a>
-
-    <a class="entry-btn general" href="general.html">
-      <span class="badge">一般</span>
       <span class="txt">
-        <span class="ttl">一般の方</span>
-        <span class="sub">上記以外でご利用の方はこちら</span>
+        <span class="ttl">お客様の声アンケート</span>
+        <span class="sub">ご協力いただける方はこちら</span>
       </span>
       <span class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
     </a>
